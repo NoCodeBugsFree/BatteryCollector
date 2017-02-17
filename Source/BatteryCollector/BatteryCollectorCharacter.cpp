@@ -44,8 +44,16 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 	CollectionSphere->SetupAttachment(RootComponent);
 	CollectionSphere->SetSphereRadius(200.f);
 
+	InitialPower = 2000.f;
+	CharacterPower = InitialPower;
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+void ABatteryCollectorCharacter::UpdatePower(float PowerChange)
+{
+	CharacterPower = CharacterPower + PowerChange;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,15 +92,30 @@ void ABatteryCollectorCharacter::CollectPickups()
 	TArray<AActor*> OverlappedActors;
 	CollectionSphere->GetOverlappingActors(OverlappedActors);
 
+	float CollectedPower = 0.f;
+
 	for (int32 i = 0; i < OverlappedActors.Num(); i++)
 	{
 		APickup* Pickup = Cast<APickup>(OverlappedActors[i]);
 		if (Pickup && Pickup->IsActive() && !Pickup->IsPendingKill())
 		{
+			ABatteryPickup* BatteryPickup = Cast<ABatteryPickup>(Pickup);
+			if (BatteryPickup)
+			{
+				CollectedPower += BatteryPickup->GetPower();
+			}
+
 			Pickup->SetIsActive(false);
 			Pickup->WasCollected();
 		}
 	}
+
+	if (CollectedPower > 0)
+	{
+		UpdatePower(CollectedPower);
+	}
+
+	CharacterPower -= 100;
 }
 
 void ABatteryCollectorCharacter::OnResetVR()

@@ -12,6 +12,8 @@ ABatteryPickup::ABatteryPickup()
 	{
 		GetMesh()->SetStaticMesh(Battery.Object);
 	}
+
+	BatteryPower = 200.f;
 }
 
 void ABatteryPickup::WasCollected_Implementation()

@@ -30,6 +30,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UFUNCTION(BlueprintPure, Category = "AAA")
+	float GetInitialPower() const { return InitialPower; }
+
+	UFUNCTION(BlueprintPure, Category = "AAA")
+	float GetCurrentPower() const { return CharacterPower; }
+
+	UFUNCTION(BlueprintCallable, Category = "AAA")
+	void UpdatePower(float PowerChange);
+
+
 protected:
 
 	/** Resets HMD orientation in VR. */
@@ -66,6 +76,14 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void CollectPickups();
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	float InitialPower;
+
+private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	float CharacterPower;
 
 public:
 	/** Returns CameraBoom subobject **/

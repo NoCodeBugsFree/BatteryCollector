@@ -11,6 +11,19 @@ class ABatteryCollectorGameMode : public AGameModeBase
 public:
 
 	ABatteryCollectorGameMode();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+protected:
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditDefaultsOnly, BlueprintReadWrite, Category = "AAA")
+	float DecayRate;
+
+private:
+
+
+
 };
 
 

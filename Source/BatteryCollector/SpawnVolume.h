@@ -41,7 +41,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", Meta = (BlueprintProtected = "true"))
 	float MaxSpawnDelay;
 	
-
+	
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
