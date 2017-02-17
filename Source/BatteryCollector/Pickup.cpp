@@ -12,10 +12,10 @@ APickup::APickup()
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickUpMesh"));
 	RootComponent = PickupMesh;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> Battery(TEXT("StaticMesh'/Game/ExampleContent/Blueprint_Communication/Meshes/SM_Battery_Medium.SM_Battery_Medium'"));
-	if(Battery.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> Sphere(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
+	if(Sphere.Succeeded())
 	{
-		PickupMesh->SetStaticMesh(Battery.Object);
+		PickupMesh->SetStaticMesh(Sphere.Object);
 	}
 	
 	bIsActive = true;
