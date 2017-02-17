@@ -17,7 +17,6 @@ ABatteryCollectorGameMode::ABatteryCollectorGameMode()
 	}
 
 	DecayRate = 0.01f;
-
 }
 
 void ABatteryCollectorGameMode::Tick(float DeltaTime)

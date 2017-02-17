@@ -39,6 +39,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void UpdatePower(float PowerChange);
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 
 protected:
 
@@ -79,6 +81,27 @@ protected:
 
 	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
 	float InitialPower;
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	float SpeedFactor;
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	float BaseSpeed;
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), VisibleAnywhere, BlueprintReadWrite, Category = "AAA")
+	UMaterialInstanceDynamic* PowerMaterial;
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	FLinearColor StartColor = FLinearColor(0.f, 0.091f, 1.f, 1.f);
+
+	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
+	FLinearColor EndColor = FLinearColor(1.f, 0.31f, 0.f, 1.f);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "AAA")
+	void PowerChangeEffect();
+
+	UFUNCTION(BlueprintCallable, Category = "AAA")
+	void PowerChangeEffect_Cpp();
 
 private:
 

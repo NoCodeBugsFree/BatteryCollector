@@ -5,6 +5,7 @@
 #include "BatteryCollectorCharacter.h"
 #include "BatteryPickup.h"
 #include "Pickup.h"
+#include "Kismet/KismetMathLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABatteryCollectorCharacter
@@ -46,6 +47,8 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 
 	InitialPower = 2000.f;
 	CharacterPower = InitialPower;
+	SpeedFactor = 0.75f;
+	BaseSpeed = 10.f;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -54,6 +57,17 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 void ABatteryCollectorCharacter::UpdatePower(float PowerChange)
 {
 	CharacterPower = CharacterPower + PowerChange;
+
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed + SpeedFactor * CharacterPower;
+
+	//PowerChangeEffect();
+
+	PowerChangeEffect_Cpp();
+}
+
+void ABatteryCollectorCharacter::OnConstruction(const FTransform& Transform)
+{
+	PowerMaterial = GetMesh()->CreateDynamicMaterialInstance(0);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,6 +130,16 @@ void ABatteryCollectorCharacter::CollectPickups()
 	}
 
 	CharacterPower -= 100;
+}
+
+void ABatteryCollectorCharacter::PowerChangeEffect_Cpp()
+{
+	if (PowerMaterial)
+	{
+		float Alpha = FMath::Clamp(GetCurrentPower() / GetInitialPower(), 0.f, 1.f);
+		FLinearColor Color = UKismetMathLibrary::LinearColorLerp(StartColor, EndColor, Alpha);
+		PowerMaterial->SetVectorParameterValue(FName("BodyColor"), Color);
+	}
 }
 
 void ABatteryCollectorCharacter::OnResetVR()
