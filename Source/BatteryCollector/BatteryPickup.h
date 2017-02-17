@@ -17,6 +17,7 @@ public:
 
 	ABatteryPickup();
 
+	virtual void WasCollected_Implementation() override;
 
 protected:
 

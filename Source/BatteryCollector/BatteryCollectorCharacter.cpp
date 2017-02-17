@@ -3,6 +3,8 @@
 #include "BatteryCollector.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
 #include "BatteryCollectorCharacter.h"
+#include "BatteryPickup.h"
+#include "Pickup.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABatteryCollectorCharacter
@@ -38,6 +40,10 @@ ABatteryCollectorCharacter::ABatteryCollectorCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	CollectionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollectionSphere"));
+	CollectionSphere->SetupAttachment(RootComponent);
+	CollectionSphere->SetSphereRadius(200.f);
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
@@ -69,8 +75,25 @@ void ABatteryCollectorCharacter::SetupPlayerInputComponent(class UInputComponent
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ABatteryCollectorCharacter::OnResetVR);
+	PlayerInputComponent->BindAction("Collect", IE_Pressed, this, &ABatteryCollectorCharacter::CollectPickups);
 }
 
+
+void ABatteryCollectorCharacter::CollectPickups()
+{
+	TArray<AActor*> OverlappedActors;
+	CollectionSphere->GetOverlappingActors(OverlappedActors);
+
+	for (int32 i = 0; i < OverlappedActors.Num(); i++)
+	{
+		APickup* Pickup = Cast<APickup>(OverlappedActors[i]);
+		if (Pickup && Pickup->IsActive() && !Pickup->IsPendingKill())
+		{
+			Pickup->SetIsActive(false);
+			Pickup->WasCollected();
+		}
+	}
+}
 
 void ABatteryCollectorCharacter::OnResetVR()
 {

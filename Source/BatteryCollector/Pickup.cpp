@@ -35,3 +35,8 @@ void APickup::Tick(float DeltaTime)
 
 }
 
+void APickup::WasCollected_Implementation()
+{
+	UE_LOG(LogTemp, Error, TEXT("APickup::WasCollected_Implementation()"));
+}
+

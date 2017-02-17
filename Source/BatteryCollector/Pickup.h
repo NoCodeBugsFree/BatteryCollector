@@ -28,6 +28,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void SetIsActive(bool NewIsActive) { bIsActive = NewIsActive; }
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AAA")
+	void WasCollected();
+	virtual void WasCollected_Implementation();
+
 protected:
 
 	bool bIsActive;
@@ -36,9 +40,5 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* PickupMesh ;
-
-	
-
-	
 	
 };
