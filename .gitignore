@@ -1,0 +1,7 @@
+Saved/
+Intermediate/
+Content/
+Binaries/
+*.db
+*.opendb
+*.suo
