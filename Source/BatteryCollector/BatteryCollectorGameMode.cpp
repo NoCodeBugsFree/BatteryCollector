@@ -4,6 +4,8 @@
 #include "BatteryCollectorGameMode.h"
 #include "BatteryCollectorCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+#include "ProgressBar.h"
 
 ABatteryCollectorGameMode::ABatteryCollectorGameMode()
 {
@@ -17,6 +19,40 @@ ABatteryCollectorGameMode::ABatteryCollectorGameMode()
 	}
 
 	DecayRate = 0.01f;
+	
+}
+
+void ABatteryCollectorGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ABatteryCollectorCharacter* BatteryCollectorCharacter = Cast<ABatteryCollectorCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	if (BatteryCollectorCharacter)
+	{
+		PowerToWin = BatteryCollectorCharacter->GetInitialPower() * 1.25f;
+		Character = BatteryCollectorCharacter;
+	}
+
+	if (HUDWidgetClass)
+	{
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), HUDWidgetClass);
+		if (CurrentWidget)
+		{
+			CurrentWidget->AddToViewport();
+		}
+	}
+}
+
+float ABatteryCollectorGameMode::GetHudPercent() const
+{
+	if (Character)
+	{
+		return Character->GetCurrentPower() / PowerToWin;
+	} 
+	else
+	{
+		return 0.f;
+	}
 }
 
 void ABatteryCollectorGameMode::Tick(float DeltaTime)
@@ -29,6 +65,12 @@ void ABatteryCollectorGameMode::Tick(float DeltaTime)
 		if (BatteryCollectorCharacter->GetCurrentPower() > 0)
 		{
 			BatteryCollectorCharacter->UpdatePower(-DeltaTime * DecayRate * (BatteryCollectorCharacter->GetInitialPower()));
+			if (ProgressBarReference)
+			{
+				ProgressBarReference->SetPercent(BatteryCollectorCharacter->GetCurrentPower() / PowerToWin);
+			}
 		}
 	}
 }
+
+
