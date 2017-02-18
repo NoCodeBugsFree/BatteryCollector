@@ -32,8 +32,6 @@ protected:
 	UPROPERTY(Meta = (BlueprintProtected = "true"), EditAnywhere, BlueprintReadWrite, Category = "AAA")
 	float BatteryPower;
 
-	
-
 private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))

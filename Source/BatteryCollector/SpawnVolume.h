@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void SpawnPickup();
 
+	UFUNCTION(BlueprintCallable, Category = "AAA")
+	void SetSpawningActive(bool bShouldSpawn);
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", Meta = (BlueprintProtected = "true"))
@@ -40,7 +43,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AAA", Meta = (BlueprintProtected = "true"))
 	float MaxSpawnDelay;
-	
 	
 private:
 

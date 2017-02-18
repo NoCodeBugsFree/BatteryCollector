@@ -23,10 +23,6 @@ ASpawnVolume::ASpawnVolume()
 void ASpawnVolume::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SpawnDelay = FMath::RandRange(MinSpawnDelay, MaxSpawnDelay);
-
-	GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnPickup, SpawnDelay, false);
 }
 
 // Called every frame
@@ -72,7 +68,18 @@ void ASpawnVolume::SpawnPickup()
 	{
 		UE_LOG(LogTemp, Error, TEXT("In SpawnVolume Object [WhatToSpawn] propery is nullptr!"));
 	}
+}
 
-	
+void ASpawnVolume::SetSpawningActive(bool bShouldSpawn)
+{
+	if (bShouldSpawn)
+	{
+		SpawnDelay = FMath::RandRange(MinSpawnDelay, MaxSpawnDelay);
+		GetWorldTimerManager().SetTimer(SpawnTimer, this, &ASpawnVolume::SpawnPickup, SpawnDelay, false);
+	}
+	else
+	{
+		GetWorldTimerManager().ClearTimer(SpawnTimer);
+	}
 }
 

@@ -3,6 +3,15 @@
 #include "GameFramework/GameModeBase.h"
 #include "BatteryCollectorGameMode.generated.h"
 
+UENUM(BlueprintType)
+enum class EBatteryPlayState : uint8
+{
+	EPlaying,
+	EGameOver,
+	EWon,
+	EUnknown
+};
+
 UCLASS(minimalapi)
 class ABatteryCollectorGameMode : public AGameModeBase
 {
@@ -17,6 +26,12 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void CreateHUD();
+
+	UFUNCTION()
+	void ItitializeSpawnVolumes();
+
 	UFUNCTION(BlueprintPure, Category = "AAA")
 	float GetPowerToWin() const { return PowerToWin; }
 
@@ -25,6 +40,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AAA")
 	void SetProgressBarReference(UProgressBar* ProgressBarReferenceToSet) { ProgressBarReference = ProgressBarReferenceToSet; }
+
+	UFUNCTION(BlueprintPure, Category = "AAA")
+	EBatteryPlayState GetCurrentPlayState() const { return CurrentPlayState; }
+
+	UFUNCTION(BlueprintCallable, Category = "AAA")
+	void SetCurrentPlayState(EBatteryPlayState NewPlayState);
 
 protected:
 
@@ -48,7 +69,14 @@ protected:
 
 private:
 
+	UFUNCTION()
+	void HandleNewState(EBatteryPlayState NewState);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	TArray<class ASpawnVolume*> SpawnVolumes;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AAA", meta = (AllowPrivateAccess = "true"))
+	EBatteryPlayState CurrentPlayState = EBatteryPlayState::EPlaying;
 
 };
 
